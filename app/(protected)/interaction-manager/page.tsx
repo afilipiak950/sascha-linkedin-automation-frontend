@@ -1,6 +1,5 @@
 'use client';
 
-import { Metadata } from 'next'
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { CircularProgress, Box } from '@mui/material';
@@ -17,10 +16,6 @@ const InteractionManagerSettings = dynamic(
   }
 );
 
-export const metadata: Metadata = {
-  title: 'Interaktions-Manager - LinkedIn Automation',
-}
-
 export default function InteractionManagerPage() {
   return (
     <Suspense fallback={
@@ -30,5 +25,5 @@ export default function InteractionManagerPage() {
     }>
       <InteractionManagerSettings />
     </Suspense>
-  )
+  );
 } 
