@@ -1,5 +1,13 @@
-import React from 'react'
-import App from '@/App'
+import { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { Providers } from '@/src/providers'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'LinkedIn Automation',
+  description: 'LinkedIn Automation Tool',
+}
 
 export default function RootLayout({
   children,
@@ -8,8 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body>
-        <App>{children}</App>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

@@ -71,166 +71,82 @@ const PostGeneratorSettings: React.FC = () => {
     { value: 'tip', label: 'Tipp' },
   ];
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Hier kommt die Logik zum Speichern der Einstellungen
+  };
+
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom>
+    <Container maxWidth="lg">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
           Post-Generator Einstellungen
         </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          {/* Post-Frequenz */}
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Post-Frequenz
-            </Typography>
-            <Box sx={{ px: 2 }}>
-              <Slider
-                value={preferences?.postFrequency || 0}
-                onChange={(_, value) => {
-                  if (preferences) {
-                    dispatch(updatePreferences({
-                      ...preferences,
-                      postFrequency: value as number,
-                    }));
-                  }
-                }}
-                min={0}
-                max={7}
-                step={1}
-                marks
-                valueLabelDisplay="auto"
-              />
-              <Typography variant="body2" color="text.secondary" align="center">
-                {preferences?.postFrequency || 0} Posts pro Woche
-              </Typography>
-            </Box>
-          </Grid>
-
-          {/* Keywords */}
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Ziel-Keywords
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-              <TextField
-                fullWidth
-                size="small"
-                value={newKeyword}
-                onChange={(e) => setNewKeyword(e.target.value)}
-                placeholder="Neues Keyword hinzufügen"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    handleAddKeyword();
-                  }
-                }}
-              />
-              <Button
-                variant="contained"
-                onClick={handleAddKeyword}
-                disabled={!newKeyword}
-              >
-                Hinzufügen
-              </Button>
-            </Box>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {keywords.map((keyword) => (
-                <Chip
-                  key={keyword}
-                  label={keyword}
-                  onDelete={() => handleRemoveKeyword(keyword)}
+        <Paper sx={{ p: 3 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  label="Keywords und Themen"
+                  helperText="Geben Sie Keywords und Themen ein, die für Ihre Posts relevant sind"
                 />
-              ))}
-            </Box>
-          </Grid>
-
-          {/* KI-Ton und Stil */}
-          <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel>KI-Ton</InputLabel>
-              <Select
-                value={preferences?.aiTone || 'professional'}
-                onChange={(e) => {
-                  if (preferences) {
-                    dispatch(updatePreferences({
-                      ...preferences,
-                      aiTone: e.target.value,
-                    }));
-                  }
-                }}
-              >
-                {tones.map((tone) => (
-                  <MenuItem key={tone.value} value={tone.value}>
-                    {tone.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel>Post-Stil</InputLabel>
-              <Select
-                value={preferences?.aiStyle || 'news'}
-                onChange={(e) => {
-                  if (preferences) {
-                    dispatch(updatePreferences({
-                      ...preferences,
-                      aiStyle: e.target.value,
-                    }));
-                  }
-                }}
-              >
-                {styles.map((style) => (
-                  <MenuItem key={style.value} value={style.value}>
-                    {style.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Automatische Veröffentlichung */}
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences?.autoPublish || false}
-                  onChange={(e) => {
-                    if (preferences) {
-                      dispatch(updatePreferences({
-                        ...preferences,
-                        autoPublish: e.target.checked,
-                      }));
-                    }
-                  }}
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Ton</InputLabel>
+                  <Select
+                    value="professional"
+                    label="Ton"
+                  >
+                    <MenuItem value="professional">Professionell</MenuItem>
+                    <MenuItem value="casual">Locker</MenuItem>
+                    <MenuItem value="formal">Formell</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Post-Länge</InputLabel>
+                  <Select
+                    value="medium"
+                    label="Post-Länge"
+                  >
+                    <MenuItem value="short">Kurz</MenuItem>
+                    <MenuItem value="medium">Mittel</MenuItem>
+                    <MenuItem value="long">Lang</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography gutterBottom>
+                  Posts pro Woche
+                </Typography>
+                <Slider
+                  defaultValue={3}
+                  step={1}
+                  marks
+                  min={1}
+                  max={7}
+                  valueLabelDisplay="auto"
                 />
-              }
-              label="Posts automatisch veröffentlichen"
-            />
-          </Grid>
-
-          {/* Speichern Button */}
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button
-                variant="contained"
-                onClick={handleSave}
-                disabled={loading}
-              >
-                {loading ? 'Wird gespeichert...' : 'Einstellungen speichern'}
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                >
+                  Einstellungen speichern
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Box>
     </Container>
   );
 };

@@ -41,256 +41,82 @@ const InteractionManagerSettings: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom>
+    <Container maxWidth="lg">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
           Interaktions-Manager Einstellungen
         </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        <Grid container spacing={3}>
-          {/* Tägliche Limits */}
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Tägliche Limits
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Likes pro Tag
+        <Paper sx={{ p: 3 }}>
+          <Box component="form" onSubmit={handleSave} noValidate>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography gutterBottom>
+                  Tägliche Interaktionen
                 </Typography>
                 <Slider
-                  value={preferences?.dailyLikeLimit || 50}
-                  onChange={(_, value) => {
-                    if (preferences) {
-                      dispatch(updatePreferences({
-                        ...preferences,
-                        dailyLikeLimit: value as number,
-                      }));
-                    }
-                  }}
+                  defaultValue={30}
+                  step={5}
+                  marks
                   min={0}
                   max={100}
-                  step={5}
-                  marks
                   valueLabelDisplay="auto"
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Kommentare pro Tag
-                </Typography>
-                <Slider
-                  value={preferences?.dailyCommentLimit || 20}
-                  onChange={(_, value) => {
-                    if (preferences) {
-                      dispatch(updatePreferences({
-                        ...preferences,
-                        dailyCommentLimit: value as number,
-                      }));
-                    }
-                  }}
-                  min={0}
-                  max={50}
-                  step={5}
-                  marks
-                  valueLabelDisplay="auto"
-                />
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Interaktionstyp</InputLabel>
+                  <Select
+                    value="all"
+                    label="Interaktionstyp"
+                  >
+                    <MenuItem value="all">Alle</MenuItem>
+                    <MenuItem value="likes">Nur Likes</MenuItem>
+                    <MenuItem value="comments">Nur Kommentare</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Verbindungsanfragen pro Tag
-                </Typography>
-                <Slider
-                  value={preferences?.dailyConnectionLimit || 25}
-                  onChange={(_, value) => {
-                    if (preferences) {
-                      dispatch(updatePreferences({
-                        ...preferences,
-                        dailyConnectionLimit: value as number,
-                      }));
-                    }
-                  }}
-                  min={0}
-                  max={50}
-                  step={5}
-                  marks
-                  valueLabelDisplay="auto"
-                />
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Zielgruppe</InputLabel>
+                  <Select
+                    value="network"
+                    label="Zielgruppe"
+                  >
+                    <MenuItem value="network">Mein Netzwerk</MenuItem>
+                    <MenuItem value="industry">Gleiche Branche</MenuItem>
+                    <MenuItem value="custom">Benutzerdefiniert</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Strategien */}
-          <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel>Like-Strategie</InputLabel>
-              <Select
-                value={preferences?.likeStrategy || 'moderate'}
-                onChange={(e) => {
-                  if (preferences) {
-                    dispatch(updatePreferences({
-                      ...preferences,
-                      likeStrategy: e.target.value,
-                    }));
-                  }
-                }}
-              >
-                {strategies.map((strategy) => (
-                  <MenuItem key={strategy.value} value={strategy.value}>
-                    {strategy.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel>Kommentar-Strategie</InputLabel>
-              <Select
-                value={preferences?.commentStrategy || 'moderate'}
-                onChange={(e) => {
-                  if (preferences) {
-                    dispatch(updatePreferences({
-                      ...preferences,
-                      commentStrategy: e.target.value,
-                    }));
-                  }
-                }}
-              >
-                {strategies.map((strategy) => (
-                  <MenuItem key={strategy.value} value={strategy.value}>
-                    {strategy.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Zielgruppen */}
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Zielgruppen
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Ziel-Industrien"
-                  value={preferences?.targetIndustries?.join(', ') || ''}
-                  onChange={(e) => {
-                    if (preferences) {
-                      dispatch(updatePreferences({
-                        ...preferences,
-                        targetIndustries: e.target.value.split(',').map(i => i.trim()),
-                      }));
-                    }
-                  }}
-                  helperText="Komma-getrennte Liste von Industriesektoren"
+                  multiline
+                  rows={4}
+                  label="Schlüsselwörter für Interaktionen"
+                  helperText="Geben Sie Schlüsselwörter ein, auf die der Bot reagieren soll"
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Ziel-Rollen"
-                  value={preferences?.targetRoles?.join(', ') || ''}
-                  onChange={(e) => {
-                    if (preferences) {
-                      dispatch(updatePreferences({
-                        ...preferences,
-                        targetRoles: e.target.value.split(',').map(r => r.trim()),
-                      }));
-                    }
-                  }}
-                  helperText="Komma-getrennte Liste von Jobtiteln"
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Automatisierung */}
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Automatisierung
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12}>
                 <FormControlLabel
-                  control={
-                    <Switch
-                      checked={preferences?.autoLike || false}
-                      onChange={(e) => {
-                        if (preferences) {
-                          dispatch(updatePreferences({
-                            ...preferences,
-                            autoLike: e.target.checked,
-                          }));
-                        }
-                      }}
-                    />
-                  }
-                  label="Automatisches Liken"
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={preferences?.autoComment || false}
-                      onChange={(e) => {
-                        if (preferences) {
-                          dispatch(updatePreferences({
-                            ...preferences,
-                            autoComment: e.target.checked,
-                          }));
-                        }
-                      }}
-                    />
-                  }
-                  label="Automatisches Kommentieren"
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={preferences?.autoConnect || false}
-                      onChange={(e) => {
-                        if (preferences) {
-                          dispatch(updatePreferences({
-                            ...preferences,
-                            autoConnect: e.target.checked,
-                          }));
-                        }
-                      }}
-                    />
-                  }
+                  control={<Switch defaultChecked />}
                   label="Automatische Verbindungsanfragen"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                >
+                  Einstellungen speichern
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-
-          {/* Speichern Button */}
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button
-                variant="contained"
-                onClick={handleSave}
-                disabled={loading}
-              >
-                {loading ? 'Wird gespeichert...' : 'Einstellungen speichern'}
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
+          </Box>
+        </Paper>
+      </Box>
     </Container>
   );
 };
