@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   AppBar,
@@ -28,11 +28,15 @@ import { logout } from '../store/slices/authSlice';
 
 const drawerWidth = 240;
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
 
@@ -42,7 +46,7 @@ const Layout: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    router.push('/login');
   };
 
   const menuItems = [
@@ -64,7 +68,7 @@ const Layout: React.FC = () => {
             button
             key={item.text}
             onClick={() => {
-              navigate(item.path);
+              router.push(item.path);
               if (isMobile) {
                 setMobileOpen(false);
               }
@@ -153,7 +157,7 @@ const Layout: React.FC = () => {
         }}
       >
         <Toolbar />
-        <Outlet />
+        {children}
       </Box>
     </Box>
   );
