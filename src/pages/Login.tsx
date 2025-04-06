@@ -1,4 +1,7 @@
+'use client'
+
 import React from 'react';
+import { useAppDispatch } from '../hooks';
 import {
   Box,
   Button,
@@ -7,7 +10,6 @@ import {
   Typography,
   Paper,
 } from '@mui/material';
-import { useAppDispatch } from '../hooks/useAppDispatch';
 import { login } from '../store/slices/authSlice';
 
 export default function Login() {
