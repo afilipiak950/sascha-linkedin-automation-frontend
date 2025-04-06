@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import {
   Container,
   Paper,
@@ -22,8 +22,8 @@ import { RootState } from '../store';
 import { fetchPreferences, updatePreferences } from '../store/slices/settingsSlice';
 
 const PostGeneratorSettings: React.FC = () => {
-  const dispatch = useDispatch();
-  const { preferences, loading, error } = useSelector((state: RootState) => state.settings);
+  const dispatch = useAppDispatch();
+  const { preferences, loading, error } = useAppSelector((state: RootState) => state.settings);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [newKeyword, setNewKeyword] = useState('');
 

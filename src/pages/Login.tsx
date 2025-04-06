@@ -7,11 +7,11 @@ import {
   Typography,
   Paper,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../hooks/useAppDispatch';
 import { login } from '../store/slices/authSlice';
 
 export default function Login() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
