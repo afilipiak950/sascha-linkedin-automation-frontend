@@ -9,25 +9,37 @@ import axios, {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 // Hilfsfunktion um zu prüfen, ob wir im Browser sind
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = () => typeof window !== 'undefined';
 
 // Funktion zum sicheren Zugriff auf localStorage
-const getStoredToken = () => {
-  if (isBrowser) {
-    return localStorage.getItem('token');
+const getStoredToken = (): string | null => {
+  try {
+    if (isBrowser()) {
+      return localStorage.getItem('token');
+    }
+  } catch (error) {
+    console.warn('localStorage access failed:', error);
   }
   return null;
 };
 
-const setStoredToken = (token: string) => {
-  if (isBrowser) {
-    localStorage.setItem('token', token);
+const setStoredToken = (token: string): void => {
+  try {
+    if (isBrowser()) {
+      localStorage.setItem('token', token);
+    }
+  } catch (error) {
+    console.warn('localStorage access failed:', error);
   }
 };
 
-const removeStoredToken = () => {
-  if (isBrowser) {
-    localStorage.removeItem('token');
+const removeStoredToken = (): void => {
+  try {
+    if (isBrowser()) {
+      localStorage.removeItem('token');
+    }
+  } catch (error) {
+    console.warn('localStorage access failed:', error);
   }
 };
 
@@ -39,36 +51,41 @@ interface ApiConfig extends AxiosRequestConfig {
 }
 
 // Axios-Instance mit Basis-Konfiguration
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const createApi = () => {
+  const api = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-// Request-Interceptor für Auth-Token
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = getStoredToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Response-Interceptor für Fehlerbehandlung
-api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  async (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Token ist abgelaufen oder ungültig
-      removeStoredToken();
-      if (isBrowser) {
-        window.location.href = '/login';
-      }
+  // Request-Interceptor für Auth-Token
+  api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+    const token = getStoredToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return Promise.reject(error);
-  }
-);
+    return config;
+  });
+
+  // Response-Interceptor für Fehlerbehandlung
+  api.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    async (error: AxiosError) => {
+      if (error.response?.status === 401) {
+        removeStoredToken();
+        if (isBrowser()) {
+          window.location.href = '/login';
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  return api;
+};
+
+const api = createApi();
 
 // API-Funktionen für LinkedIn-Automatisierung
 export const linkedinApi = {
