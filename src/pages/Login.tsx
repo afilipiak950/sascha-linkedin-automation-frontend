@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
@@ -24,7 +24,7 @@ import { login } from '../store/slices/authSlice';
 import { RootState } from '../store';
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state: RootState) => state.auth);
 
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     try {
       // Hier kommt die LinkedIn OAuth-Logik
       // Nach erfolgreicher Verbindung:
-      navigate('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       console.error('LinkedIn-Verbindung fehlgeschlagen:', error);
     }
