@@ -6,6 +6,12 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  compiler: {
+    emotion: true,
+  },
+  experimental: {
+    appDir: true,
+  },
 }
 
 module.exports = nextConfig 
