@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
+'use client';
+
 import { Box, Container, Grid, Typography } from '@mui/material';
-import ContentStrategyPanel from './ContentStrategyPanel';
-import EngagementAnalysisPanel from './EngagementAnalysisPanel';
-import NetworkGrowthPanel from './NetworkGrowthPanel';
-import MetricsPanel from './MetricsPanel';
+import {
+  ContentStrategyPanel,
+  EngagementAnalysisPanel,
+  NetworkGrowthPanel,
+  MetricsPanel
+} from '../panels';
 
-const AgentDashboard: React.FC = () => {
-  const [selectedAgent, setSelectedAgent] = useState<string>('content');
-
+export default function AgentDashboard() {
   return (
     <Container maxWidth="xl">
-      <Box sx={{ my: 4 }}>
+      <Box sx={{ py: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          KI-Agenten Dashboard
+          LinkedIn Automation Dashboard
         </Typography>
         
+        <MetricsPanel />
+        
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            {selectedAgent === 'content' && <ContentStrategyPanel />}
-            {selectedAgent === 'engagement' && <EngagementAnalysisPanel />}
-            {selectedAgent === 'network' && <NetworkGrowthPanel />}
+          <Grid item xs={12} md={6}>
+            <ContentStrategyPanel />
           </Grid>
-          
-          <Grid item xs={12} md={4}>
-            <MetricsPanel />
+          <Grid item xs={12} md={6}>
+            <EngagementAnalysisPanel />
+          </Grid>
+          <Grid item xs={12}>
+            <NetworkGrowthPanel />
           </Grid>
         </Grid>
       </Box>
     </Container>
   );
-};
-
-export default AgentDashboard; 
+} 
