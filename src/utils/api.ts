@@ -1,4 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { 
+  AxiosRequestConfig, 
+  AxiosResponse, 
+  AxiosError,
+  InternalAxiosRequestConfig
+} from 'axios';
 
 // API-Basis-URL aus den Umgebungsvariablen
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -42,7 +47,7 @@ const api = axios.create({
 });
 
 // Request-Interceptor für Auth-Token
-api.interceptors.request.use((config: ApiConfig) => {
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = getStoredToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
