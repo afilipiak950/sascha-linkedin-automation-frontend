@@ -4,43 +4,24 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig
 } from 'axios';
+import { storage } from './storage';
 
 // API-Basis-URL aus den Umgebungsvariablen
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-// Hilfsfunktion um zu prüfen, ob wir im Browser sind
-const isBrowser = () => typeof window !== 'undefined';
+// Token-Management
+const TOKEN_KEY = 'auth_token';
 
-// Funktion zum sicheren Zugriff auf localStorage
 const getStoredToken = (): string | null => {
-  try {
-    if (isBrowser()) {
-      return localStorage.getItem('token');
-    }
-  } catch (error) {
-    console.warn('localStorage access failed:', error);
-  }
-  return null;
+  return storage.getItem(TOKEN_KEY);
 };
 
 const setStoredToken = (token: string): void => {
-  try {
-    if (isBrowser()) {
-      localStorage.setItem('token', token);
-    }
-  } catch (error) {
-    console.warn('localStorage access failed:', error);
-  }
+  storage.setItem(TOKEN_KEY, token);
 };
 
 const removeStoredToken = (): void => {
-  try {
-    if (isBrowser()) {
-      localStorage.removeItem('token');
-    }
-  } catch (error) {
-    console.warn('localStorage access failed:', error);
-  }
+  storage.removeItem(TOKEN_KEY);
 };
 
 interface ApiConfig extends AxiosRequestConfig {
@@ -74,7 +55,7 @@ const createApi = () => {
     async (error: AxiosError) => {
       if (error.response?.status === 401) {
         removeStoredToken();
-        if (isBrowser()) {
+        if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
       }

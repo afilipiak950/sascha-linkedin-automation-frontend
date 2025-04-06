@@ -9,6 +9,9 @@ const nextConfig = {
   },
   compiler: {
     emotion: true
+  },
+  experimental: {
+    serverActions: true
   }
 }
 
