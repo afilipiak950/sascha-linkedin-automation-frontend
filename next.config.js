@@ -2,17 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    appDir: true,
-  },
-  modularizeImports: {
-    '@mui/icons-material': {
-      transform: '@mui/icons-material/{{member}}'
-    }
-  },
-  compiler: {
-    emotion: true
-  }
 }
 
 module.exports = nextConfig 

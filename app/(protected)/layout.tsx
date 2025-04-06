@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
-import Layout from '@/src/components/Layout'
-import { auth } from '@/src/utils/auth'
+import Layout from '../../src/components/Layout'
+import { auth } from '../../src/utils/auth'
 import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
