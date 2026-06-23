@@ -58,9 +58,11 @@ wheels/
 # Streamlit
 .streamlit/secrets.toml
 
-# Virtual Environment
-venv/
+# Environments
+.env
+.venv
 env/
+venv/
 ENV/
 
 # IDE
@@ -72,4 +74,7 @@ ENV/
 # Misc
 .DS_Store
 .env
-.env.local 
+.env.local
+
+# OS
+Thumbs.db 
